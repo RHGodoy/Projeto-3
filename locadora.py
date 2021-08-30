@@ -10,7 +10,7 @@ class Locadora(object):
         self.custoSemana = custoSemana
         self.clientes = {} # dict que armazena clientes onde a chave é o idCliente
 
-    def criaCliente(self,nome):
+    def criaCliente(self, nome):
         """
         Cria cliente e atribui um id para controle, adciona novo cliente a listas de clientes da locadora
         :param nome: str
@@ -22,7 +22,7 @@ class Locadora(object):
         print(f'O cliente {nome} foi criado com sucesso!')
         return self.clientes[self.numClientes]
 
-    def novoAluguel(self, idCliente,nome, modalidade,qtdeBikes,dataInicio):
+    def novoAluguel(self, idCliente, nome, modalidade, qtdeBikes, dataInicio):
         """
         Cria novo aluguel e armazena dados em self.alugueisAtivos
         :param idCliente: int
@@ -31,15 +31,32 @@ class Locadora(object):
         :param dataInicio: datetime
         :return: bool
         """
-        self.estoque -= 1
-        self.alugueisAtivos[idCliente] = {'nome': nome,
+        try:
+            if qtdeBikes <= 0:
+                raise ValueError("Quantidade invalida")
+
+            if qtdeBikes > self.estoque:
+                raise SystemError("Estoque indisponivel")
+
+            self.estoque -= qtdeBikes
+            self.alugueisAtivos[idCliente] = {'nome': nome,
                                           'modalidade': modalidade,
                                           'qtdeBikes': qtdeBikes,
-                                          'inicio':dataInicio
-                                          }
+                                          'inicio':dataInicio}
+
+        except ValueError:
+            print(f"Locadora - Aluguel de {qtdeBikes} bicicletas não efetuado por quantidade inválida. Estoque: {self.estoque}")
+            return 0
+        except SystemError:
+            print(f"Locadora - Aluguel de {qtdeBikes} biciletas não efetuado por falta de estoque. Estoque: {self.estoque}")
+            return 0
+        except:
+            print(f"Locadora - Aluguel de {qtdeBikes} biciletas não efetuado. Estoque: {self.estoque}")
+            return 0
+
         return True
 
-    def encerraAluguel(self,idCliente,dataFim):
+    def encerraAluguel(self, idCliente, dataFim):
         """
         Encerra o aluguel e retorna valor a ser cobrado
         :param idCliente: int
@@ -92,15 +109,15 @@ class Cliente(object):
         self.nome = nome
         self.idCliente = idCliente
 
-    def consultaEstoque(self,Locadora):
+    def consultaEstoque(self, objLocadora):
         """
         Retorna número de bicicletas disponíveis
         :param objetoLocadora: object Cliente
         :return: int
         """
-        return Locadora.estoque
+        return objLocadora.estoque
 
-    def alugaBike(self,Locadora,qtdeBikes,modalidade,dataInicio=None):
+    def alugaBike(self, objLocadora, qtdeBikes, modalidade, dataInicio=None):
         """
         ALuga bicicletas
         :param Locadora: objeto Locadora
@@ -119,7 +136,7 @@ class Cliente(object):
         if dataInicio == None:
             self.dateInicio = datetime.now()
         # verifica se a dataInicio é um objeto datetime
-        elif isinstance(dataInicio,datetime):
+        elif isinstance(dataInicio, datetime):
             self.dataInicio = dataInicio
         else:
             print('Data inválida')
@@ -135,25 +152,24 @@ class Cliente(object):
 
         self.modalidade = modalidade
 
-        return Locadora.novoAluguel(idCliente=self.idCliente,
+        return objLocadora.novoAluguel(idCliente=self.idCliente,
                                     nome=self.nome,
                                     modalidade=self.modalidade,
                                     qtdeBikes=self.qtdeBikes,
                                     dataInicio=self.dataInicio)
 
-    def devolveBike(self,Locadora, dataFim=None):
+    def devolveBike(self, objLocadora, dataFim=None):
         if dataFim == None:
             self.dataFim = datetime.now()
         elif isinstance(dataFim,datetime):
             self.dataFim = dataFim
         else:
             self.dataFim = dataFim
-        custo = Locadora.encerraAluguel(idCliente=self.idCliente, dataFim=self.dataFim)
+        custo = objLocadora.encerraAluguel(idCliente=self.idCliente, dataFim=self.dataFim)
         print("O valor do aluguel foi de R$",custo)
 
-def validaEntradaNovoAluguel(Locadora):
+def validaEntradaNovoAluguel(objLocadora):
     """
-
     :param Locadora: objeto da classe Locadora
     :return:
             idCliente: int
@@ -166,10 +182,10 @@ def validaEntradaNovoAluguel(Locadora):
             idCliente = int(input('Digite id do cliente (caso não saiba digite 0 para listar clientes):\n'))
         except:
             print('Entrada deve ser um número inteiro')
-        if idCliente in Locadora.clientes:
+        if idCliente in objLocadora.clientes:
             break
         elif idCliente == 0:
-            for key,value in Locadora.clientes.items():
+            for key,value in objLocadora.clientes.items():
                 print(f'Id do cliente: {value.idCliente}\nNome do cliente: {value.nome}')
         else:
             print('Cliente inexistente')
@@ -179,7 +195,7 @@ def validaEntradaNovoAluguel(Locadora):
             qtdeBikes = int(input('Digite número de bikes para aluguar:\n'))
         except:
             print('Digite um número inteiro')
-        if qtdeBikes > Locadora.estoque:
+        if qtdeBikes > objLocadora.estoque:
             print(f'Quantidade desejada menor que quantidade disponível: {Locadora.estoque}')
         elif qtdeBikes <= 0:
             print('Quantidade inválida, digite novamente')
@@ -198,7 +214,6 @@ def validaEntradaNovoAluguel(Locadora):
 
 def validaEntradaEncerraAluguel(Locadora):
     """
-
     :param Locadora: objeto da classe Locadora
     :return:
             idCliente: int
@@ -223,8 +238,8 @@ def validaEntradaEncerraAluguel(Locadora):
 def main():
     # Cria locadora
     estoque = 10
-    custoHora = 1
-    custoDia = 10
+    custoHora = 5
+    custoDia = 25
     custoSemana = 100
     locadora = Locadora(estoque=estoque,custoHora=custoHora,custoDia=custoDia,custoSemana=custoSemana)
 
