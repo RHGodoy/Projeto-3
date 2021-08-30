@@ -31,7 +31,7 @@ class Locadora(object):
         :param dataInicio: datetime
         :return: bool
         """
-        self.estoque -= 1
+        self.estoque -= qtdeBikes
         self.alugueisAtivos[idCliente] = {'nome': nome,
                                           'modalidade': modalidade,
                                           'qtdeBikes': qtdeBikes,
@@ -223,9 +223,9 @@ def validaEntradaEncerraAluguel(Locadora):
 def main():
     # Cria locadora
     estoque = 10
-    custoHora = 1
-    custoDia = 10
-    custoSemana = 100
+    custoHora = 5                   # retirado do enunciado do projeto
+    custoDia = 25                   # retirado do enunciado do projeto
+    custoSemana = 100               # retirado do enunciado do projeto
     locadora = Locadora(estoque=estoque,custoHora=custoHora,custoDia=custoDia,custoSemana=custoSemana)
 
     # Menu de opções
