@@ -238,8 +238,8 @@ def validaEntradaEncerraAluguel(Locadora):
 def main():
     # Cria locadora
     estoque = 10
-    custoHora = 1
-    custoDia = 10
+    custoHora = 5
+    custoDia = 25
     custoSemana = 100
     locadora = Locadora(estoque=estoque,custoHora=custoHora,custoDia=custoDia,custoSemana=custoSemana)
 
