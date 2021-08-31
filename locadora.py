@@ -74,6 +74,7 @@ class Locadora(object):
             print("Data de entrega menor que data de início")
             return False
 
+
         if modalidade == 'hora':
             horasAlugadas, restoSegundos = divmod(tempoAluguel.total_seconds(),3600) # retorna horas
             minutosAlugados = restoSegundos // 60 # retorna minutos que exceram número inteiro de horas
@@ -101,7 +102,7 @@ class Locadora(object):
             custo = custo * 0.7
 
         # Devolve bicicleta para estoque
-        self.estoque += 1
+        self.estoque += numBikes
         return custo
 
 class Cliente(object):
@@ -277,7 +278,7 @@ def main():
             # Cria data de início:
             dataInicio = datetime.now()
             # Cria novo aluguel
-            locadora.clientes[idCliente].alugaBike(Locadora=locadora,
+            locadora.clientes[idCliente].alugaBike(objLocadora=locadora,
                                                    qtdeBikes=qtdeBikes,
                                                    modalidade=modalidade,
                                                    dataInicio=dataInicio)
@@ -285,7 +286,7 @@ def main():
         elif entradaUsuario == 3:
             idCliente = validaEntradaEncerraAluguel(locadora)
             dataFim = datetime.now()
-            locadora.clientes[idCliente].devolveBike(Locadora=locadora, dataFim=dataFim)
+            locadora.clientes[idCliente].devolveBike(objLocadora=locadora, dataFim=dataFim)
 
         # Imprime dados aluguéis ativos
         elif entradaUsuario == 4:
