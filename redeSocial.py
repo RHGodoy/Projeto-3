@@ -78,5 +78,15 @@ class RedeSocial:
 
         return top_influencers
 
-    def caminho_entre_usuarios(self, usuario1, usuario2):
-        pass
+    def caminho_entre_usuarios(self, origem, destino):
+        caminho = {origem: [origem]}
+        fila = [origem]
+        while len(fila):
+            primeiro_elemento = fila[0]
+            fila = fila[1:]
+            for adjacencia in self.adjacencia[primeiro_elemento]:
+                if adjacencia not in caminho:
+                    caminho[adjacencia] = [caminho[primeiro_elemento], adjacencia]
+                    fila.append(adjacencia)
+
+        return caminho.get(destino)
