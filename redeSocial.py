@@ -34,8 +34,33 @@ class RedeSocial:
     def quantidade_seguindo(self, usuario):
         return self.usuarios[usuario], len(self.adjacencia[usuario])
 
-    def ordena_stories(self):
-        pass
+    def ordena_stories(self, usuario):
+        # cria a lista dos stories por usuario
+        stories_ordenados = []
+        melhores_amigos = []
+        usuarios_que_segue = []
+
+        # seleciona primeiramente os melhores amigos
+        for k, v in self.adjacencia[usuario].items():
+            if v == '2':
+                melhores_amigos.append(k)
+        
+        # seleciona os demais seguidores:
+        for k, v in self.adjacencia[usuario].items():
+            if v == '1':
+                usuarios_que_segue.append(k)
+        
+        # organiza as duas listas e adiciona a principal
+        melhores_amigos = sorted(melhores_amigos)
+        usuarios_que_segue = sorted(usuarios_que_segue)
+
+        for item in melhores_amigos:
+            stories_ordenados.append(item)
+
+        for item in usuarios_que_segue:
+            stories_ordenados.append(item)
+
+        return self.usuarios[usuario], stories_ordenados
 
     def top_influencers(self, k):
         # cria dict usuario: número de seguidores
