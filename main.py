@@ -2,8 +2,8 @@ import redeSocial
 import csv
 
 
-def imprime_quantidade_seguidores(usuario):
-    nome, quantidade_seguidores = redeSocial.quantidade_seguidores(usuario=usuario)
+def imprime_quantidade_seguidores(rede_social: redeSocial.RedeSocial, usuario) -> None:
+    nome, quantidade_seguidores = rede_social.quantidade_seguidores(usuario=usuario)
     print(f'Seguidores da {nome}: {quantidade_seguidores}')
 
 
@@ -15,12 +15,12 @@ def imprime_quantidade_seguindo(usuario):
 def imprime_top_influencers(k=10):
     print(f'Top influences: {redeSocial.top_influencers(k)}')
 
-    
+
 def imprime_stories_ordenados(usuario):
     nome, stories_usuario = redeSocial.ordena_stories(usuario)
     print(f'Ordem dos stories de {nome}: {stories_usuario}')
 
-    
+
 def imprime_caminho_entre_usuarios(origem, destino):
     lista_caminho = redeSocial.caminho_entre_usuarios(origem=origem, destino=destino)
     caminho = []
@@ -47,8 +47,8 @@ if __name__ == '__main__':
         for row in csv_read:
             redeSocial.conecta(origem=row[0], destino=row[1], peso=row[2])
 
-    imprime_quantidade_seguidores(usuario='helena42')
+    imprime_quantidade_seguidores(rede_social=redeSocial, usuario='helena42')
     imprime_quantidade_seguindo(usuario='helena42')
     imprime_top_influencers(k=6)
-    imprime_stories_ordenados(usuario = 'helena42')
+    imprime_stories_ordenados(usuario='helena42')
     imprime_caminho_entre_usuarios(origem='helena42', destino='isadora45')

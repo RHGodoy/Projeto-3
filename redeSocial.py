@@ -1,7 +1,7 @@
 class RedeSocial:
     def __init__(self):
         self.adjacencia = {}
-        self.usuarios = {}
+        self.usuarios = {}  # relaciona nome e usuário
 
     def adiciona(self, usuario, nome):
         self.adjacencia[usuario] = {}
@@ -10,20 +10,10 @@ class RedeSocial:
     def conecta(self, origem, destino, peso):
         self.adjacencia[origem][destino] = peso
 
-    def exibir_matriz(self):
-        primeira_linha = '    '
-        for i in self.adjacencia:
-            primeira_linha += str(i) + ' '
-        print(primeira_linha)
-        print('   ' + ('-' * len(primeira_linha)))
-
-        for i in self.adjacencia:
-            linha = str(i) + ' | '
-            for j in self.adjacencia:
-                linha += str(self.adjacencia[i].get(j, 0)) + ' '
-            print(linha)
-
     def quantidade_seguidores(self, usuario):
+        """
+        Retorna quantidade de seguidores do usuário
+        """
         contador = 0
         for k, v in self.adjacencia.items():
             for key, value in v.items():
@@ -32,25 +22,32 @@ class RedeSocial:
         return self.usuarios[usuario], contador
 
     def quantidade_seguindo(self, usuario):
+        """
+        Retorna quantidade de usuários que usuário está seguindo
+        """
         return self.usuarios[usuario], len(self.adjacencia[usuario])
 
     def ordena_stories(self, usuario):
+        """
+        Ordena stories sendo exibido primeiro os melhores amigos em ordem alfabética e
+        em seguida amigos em ordem alfabética
+        """
         # cria a lista dos stories por usuario
         stories_ordenados = []
         melhores_amigos = []
         usuarios_que_segue = []
 
-        # seleciona primeiramente os melhores amigos
+        # seleciona "melhores amigos"
         for k, v in self.adjacencia[usuario].items():
             if v == '2':
                 melhores_amigos.append(k)
-        
-        # seleciona os demais seguidores:
+
+        # seleciona "amigos"
         for k, v in self.adjacencia[usuario].items():
             if v == '1':
                 usuarios_que_segue.append(k)
-        
-        # organiza as duas listas e adiciona a principal
+
+        # ordena em ordem alfabética cada lista e junta as listas
         melhores_amigos = sorted(melhores_amigos)
         usuarios_que_segue = sorted(usuarios_que_segue)
 
@@ -63,6 +60,10 @@ class RedeSocial:
         return self.usuarios[usuario], stories_ordenados
 
     def top_influencers(self, k):
+        """
+        Retorna os k usuários com mais seguidores
+        """
+
         # cria dict usuario: número de seguidores
         seguidores_por_usuario = {}
         for key, value in self.adjacencia.items():
@@ -79,6 +80,9 @@ class RedeSocial:
         return top_influencers
 
     def caminho_entre_usuarios(self, origem, destino):
+        """
+        Retorna menor caminho entre dois usuários
+        """
         caminho = {origem: [origem]}
         fila = [origem]
         while len(fila):
